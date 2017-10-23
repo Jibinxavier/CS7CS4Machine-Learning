@@ -47,3 +47,4 @@ model.fit(X_train, y_train, epochs=1000, batch_size=10,verbose=0)
 model.fit(X_train, y_train, epochs=100, batch_size=100,verbose=1)
 score = model.evaluate(X_test, y_test, batch_size=100)
 print(score)
+
