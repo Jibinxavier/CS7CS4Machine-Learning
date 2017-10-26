@@ -1,8 +1,8 @@
 import os
 import zipfile
-import urllib.request
-from pyquery import PyQuery as pq
+import urllib.request 
 import pandas as pd
+import reverse_geocoder as rg
 def unzip_data(zip_f,data_folder_path):
     """
         unzips files into data folder
@@ -35,27 +35,16 @@ def get_data(urls):
 
 
 
-def get_census_column_names(path="./data/census-income.data.html"):
-    page = pq(filename=path)
-  
-    column = page("PRE").eq(2).text()
-    column = column.splitlines()
-
-    column_names = []
-    for c in column:
-        column_names.append(c.split('\t')[0])
-    
-    return column_names
-def get_census_dataset():
-    zip_f = "data/census-income-data-combined.zip"
+ 
+def get_news_dataset():
+    zip_f = "data/OnlineNewsPopularity.zip"
     data_folder_path ="data"
-    dataset_path = "data/census-income-data-combined.csv"
+    dataset_path = "data/OnlineNewsPopularity/OnlineNewsPopularity.csv"
     unzip_data(zip_f,data_folder_path)
-    column_names = get_census_column_names()
-    df = pd.read_csv(dataset_path, names=column_names)
+    
+    df = pd.read_csv(dataset_path)
     return df
-
-
+ 
 # wget.download("https://www.dropbox.com/sh/euppz607r6gsen2/AABABUTdx7YqCeBquA1Ky7z8a/The%20SUM%20dataset?dl=1#")
 
 # "https://www.dropbox.com/sh/euppz607r6gsen2/AABABUTdx7YqCeBquA1Ky7z8a/The%20SUM%20dataset?dl=1#"
