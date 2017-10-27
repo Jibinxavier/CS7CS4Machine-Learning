@@ -48,25 +48,26 @@ def get_news_dataset():
 
 def create_classes(row):
     """
-
+        - 0 - 10            class 1
+        - 10 - 100          class 2 
+        - 101 - 1000        class 3
+        - 1001 - 10,000     class 4
+        - 10,001 - 100,000  class 5
+        - 100,001 -         class 6
     """
-
-  
-
-    if(row[' shares'] <= 140550):
+    if(row[' shares'] <= 10):
         
         return 0
-    elif( row[' shares'] > 140550 and row[' shares'] <= 281101  ):
-        print("hewr")
+    elif( row[' shares'] > 10 and row[' shares'] <= 100  ):
+     
         return 1
-    elif( row[' shares'] > 281101 and row[' shares'] <= 421651  ):
-         
+    elif( row[' shares'] > 100 and row[' shares'] <= 1000  ):
+     
         return 2
-    elif( row[' shares'] > 421651 and row[' shares'] <= 562202  ):
+    elif( row[' shares'] > 1000 and row[' shares'] <= 10000  ):
          
         return 3
-
-    elif( row[' shares'] > 562202 and row[' shares'] <= 702752  ):
+    elif( row[' shares'] > 10000 and row[' shares'] <= 100000  ):
          
         return 4
     else:
