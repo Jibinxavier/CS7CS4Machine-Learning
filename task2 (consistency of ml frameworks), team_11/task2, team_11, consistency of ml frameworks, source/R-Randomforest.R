@@ -48,9 +48,6 @@ split <- sample.split(sum_dataset$Target,SplitRatio = 0.7)
 training_set <- subset(sum_dataset, split == TRUE)
 test_set <- subset(sum_dataset, split == FALSE)
 
-
-
-
 # Create the forest.
 # Use 'Target' as regression target
 fmla <- as.formula(paste("Target ~ . - ", paste(collapse = '-', unneededFeature)))
@@ -65,23 +62,32 @@ print(mae(result-test_set$Target))
 #######################################################################################################################################
 
 # Import the data set
-sum_dataset <- read.table("data/without noise/kc_house_data.csv", header=TRUE, sep=";", stringsAsFactors=FALSE, nrows=10000)
+house_dataset <- read.table("data/kc_house_data.csv", header=TRUE, sep=",", stringsAsFactors=FALSE, nrows=10000)
 
 # Print some records from data set readingSkills.
-head(sum_noise_dataset)
+head(house_dataset)
 
+# Feature Scaling
+nums <- sapply(house_dataset, is.numeric)
+house_dataset[,nums] <- scale(house_dataset[,nums])
 
 # Split dataset into Training set and Testing set, in a 30/70 ratio
 # install.packages("caTools")
 set.seed(123)
-split <- sample.split(sum_noise_dataset$Target,SplitRatio = 0.7)
-training_set <- subset(sum_noise_dataset, split == TRUE)
-test_set <- subset(sum_noise_dataset, split == FALSE)
+split <- sample.split(house_dataset$price,SplitRatio = 0.7)
+training_set <- subset(house_dataset, split == TRUE)
+test_set <- subset(house_dataset, split == FALSE)
 
-explanatory_numeric <- c('bedrooms', 'bathrooms', 'sqft_living', 'sqft_lot', 'condition', 'sqft_above', 'yr_built',
+features <- c('bedrooms', 'bathrooms', 'sqft_living', 'sqft_lot', 'condition', 'sqft_above', 'yr_built',
                          'sqft_living15', 'sqft_lot15')
 
 ## Create a formula for a model with a large number of variables:
-fmla <- as.formula(paste("price ~ ", paste(collapse = '-', explanatory_numeric)))
-fitsRandomForest(fmla, )
+fmla <- as.formula(paste("price ~ ", paste(collapse = '+', features)))
+forest <- fitsRandomForest(fmla, training_set)
+
+# Apply random forest
+result = predict(forest, test_set)
+
+print(rmse(result-test_set$price))
+print(mae(result-test_set$price))
 
