@@ -88,6 +88,6 @@ forest <- fitsRandomForest(fmla, training_set)
 # Apply random forest
 result = predict(forest, test_set)
 
-print(rmse(result-test_set$Target))
-print(mae(result-test_set$Target))
+print(rmse(result-test_set$price))
+print(mae(result-test_set$price))
 
