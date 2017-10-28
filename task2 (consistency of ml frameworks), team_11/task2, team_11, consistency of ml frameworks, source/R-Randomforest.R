@@ -40,18 +40,12 @@ unneededFeature <- c('Target', 'Target.Class', 'Instance')
 
 # Feature Scaling
 sum_dataset[, -ncol(sum_dataset)] <- scale(sum_dataset[, -ncol(sum_dataset)])
-# 
-# # Splitting
-# set.seed(123)
-# split <- sample.split(sum_dataset$Target,SplitRatio = 0.7)
-# training_set <- subset(sum_dataset, split == TRUE)
-# test_set <- subset(sum_dataset, split == FALSE)
 
 # Create the forest.
 # Use 'Target' as regression target
 fmla <- as.formula(paste("Target ~ . - ", paste(collapse = '-', unneededFeature)))
 
-# model_test_split(sum_dataset, fmla)
+## TEST SPLIT
 # Splitting the data
 set.seed(123)
 split <- sample.split(sum_dataset[,1],SplitRatio = 0.7)
@@ -100,24 +94,39 @@ head(house_dataset)
 nums <- sapply(house_dataset, is.numeric)
 house_dataset[,nums] <- scale(house_dataset[,nums])
 
-# Split dataset into Training set and Testing set, in a 30/70 ratio
-# install.packages("caTools")
-set.seed(123)
-split <- sample.split(house_dataset$price,SplitRatio = 0.7)
-training_set <- subset(house_dataset, split == TRUE)
-test_set <- subset(house_dataset, split == FALSE)
-
 features <- c('bedrooms', 'bathrooms', 'sqft_living', 'sqft_lot', 'condition', 'sqft_above', 'yr_built',
                          'sqft_living15', 'sqft_lot15')
 
 ## Create a formula for a model with a large number of variables:
-fmla <- as.formula(paste("Target ~ . - ", paste(collapse = '-', unneededFeature)))
-model_test_split(sum_dataset, fmla)
-model_cross_validation(sum_dataset, fmla)
+fmla <- as.formula(paste("price ~  ", paste(features, collapse = '+')))
 
-# # Apply random forest
-# result = predict(forest, test_set)
-# 
-# print(rmse(result-test_set$price))
-# print(mae(result-test_set$price))
+## TEST SPLIT
+# Splitting the data
+set.seed(123)
+split <- sample.split(house_dataset[,1],SplitRatio = 0.7)
+training_set <- subset(house_dataset, split == TRUE)
+test_set <- subset(house_dataset, split == FALSE)
 
+# Create the forest based on the data
+forest <- randomForest(fmla, training_set)
+
+# Apply random forest
+result = predict(forest, test_set)
+
+print(rmse(result-test_set$price))
+print(mae(result-test_set$price))
+
+## Cross Validation
+
+# define training control
+train_control <- trainControl(method="cv", number=10)
+
+# fix the parameters of the algorithm
+grid <- expand.grid(.fL=c(0), .usekernel=c(FALSE))
+
+# train the model
+model <- train(fmla, data=house_dataset, trControl=train_control, method='rf')
+
+# summarize results
+print(model)
+chunk <- c()
