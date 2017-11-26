@@ -2,7 +2,6 @@ import os
 import zipfile
 import urllib.request 
 import pandas as pd
-import reverse_geocoder as rg
 def unzip_data(zip_f,data_folder_path):
     """
         unzips files into data folder
