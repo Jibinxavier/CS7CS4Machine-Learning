@@ -1,4 +1,0 @@
-sklearn
-jupyter
-pyquery
-pygeocoder
